@@ -1,0 +1,94 @@
+---
+export interface Props {
+  headings: Array<string>;
+  contents: Array<string>;
+  activeTextColor?: string;
+}
+const { headings, contents, activeTextColor = "#A741FF" } = Astro.props as Props;
+
+---
+
+<div class="tabs">
+    <ul class="tabs-header">
+        {headings.map(heading => (
+            <li>{heading}</li>
+        ))}
+    </ul>
+    <ul class="tabs-content">
+        {contents.map(content => (
+            <li class="tab">{content}</li>
+        ))}
+    </ul>
+</div>
+
+<style define:vars={{activeTextColor}}>
+  .tabs {
+    margin-top: 30px;
+  }
+
+  .tabs-header {
+    display: flex;
+    background: #333;
+    color: #fff;
+    padding: 10px 20px;
+  }
+
+  .tabs-header li {
+    margin-right: 20px;
+    cursor: pointer;
+  }
+
+  .tabs-content {
+    font-size: 18px;
+    padding: 20px;
+    border: 1px solid #333;
+    font-weight: bold;
+    background: #f4f4f4;
+  }
+
+  .activeColor {
+    color: var(--activeTextColor);
+    font-weight: 900;
+  }
+
+  .hidden {
+    display: none;
+  }
+</style>
+
+<script>
+
+// select HTML nodes
+const header: any = document.querySelector(".tabs-header");
+const content: any = document.querySelector(".tabs-content");
+const tabHeaders = [...header.children];
+const tabContents = [...content.children];
+
+
+function clearTabs () {
+  tabHeaders.forEach(tab => {
+    tab.classList.remove("activeColor");
+  })
+}
+
+function showDownloadMethod(index: number) {
+  tabContents.forEach((content, contentIndex) => {
+    if (contentIndex === index) content.classList.remove("hidden");
+    else content.classList.add("hidden");
+  })
+}
+
+tabHeaders.forEach((tab, i) => {
+  tab.addEventListener( "click", () => {
+    clearTabs();
+    tab.classList.add("activeColor");
+    showDownloadMethod(i);
+  })
+})
+
+// set default
+tabHeaders[0].classList.add("activeColor");
+showDownloadMethod(0);
+
+
+</script>
